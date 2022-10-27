@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import Navigation from './components/Navigation/Navigation';
 import FaceRecognition from './components/FaceRecognition/FaceRecognition';
-import Clarifai from'clarifai';
 import Logo from './components/Logo/Logo';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
 import Rank from './components/Rank/Rank';
@@ -10,9 +9,12 @@ import Register from './components/Register/Register';
 import Particles from './components/Particles/Particles';
 import './App.css';
 
-const app = new Clarifai.App({
-  apiKey: 'af06916430094097a28e457bf50abdbf'
-});
+const {ClarifaiStub, grpc} = require("clarifai-nodejs-grpc");
+
+const stub = ClarifaiStub.grpc();
+
+const metadata = new grpc.Metadata();
+metadata.set("authorization", "Key " + "af06916430094097a28e457bf50abdbf");
 
 class App extends Component {
   constructor() {
@@ -65,7 +67,7 @@ class App extends Component {
     this.setState({imageUrl: this.state.input});
     app.models
     .predict(
-      Clarifai.FACE_DETECT_MODELL,
+      Clarifai.FACE_DETECT_MODEL,
       this.state.input)
     .then(response => this.faceBox(this.calculateFaaceLocation(response)))
     .catch(err => console.log(err))
