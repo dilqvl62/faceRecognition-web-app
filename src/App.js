@@ -9,12 +9,13 @@ import Register from './components/Register/Register';
 import Particles from './components/Particles/Particles';
 import './App.css';
 
+const MODEL_ID = 'FACE_DETECT_MODEL';
 const {ClarifaiStub, grpc} = require("clarifai-nodejs-grpc");
-
 const stub = ClarifaiStub.grpc();
 
 const metadata = new grpc.Metadata();
 metadata.set("authorization", "Key " + "af06916430094097a28e457bf50abdbf");
+
 
 class App extends Component {
   constructor() {
@@ -65,12 +66,17 @@ class App extends Component {
 
   onButtonSubmit = () => {
     this.setState({imageUrl: this.state.input});
-    app.models
-    .predict(
-      Clarifai.FACE_DETECT_MODEL,
-      this.state.input)
-    .then(response => this.faceBox(this.calculateFaaceLocation(response)))
-    .catch(err => console.log(err))
+
+    fetch(MODEL_ID , this.state.input)
+        .then(response => this.faceBox(this.calculateFaaceLocation(response)))
+        .catch(err => console.log(err))
+    
+        // app.models
+    // .predict(
+    //   Clarifai.FACE_DETECT_MODEL,
+    //   this.state.input)
+    // .then(response => this.faceBox(this.calculateFaaceLocation(response)))
+    // .catch(err => console.log(err))
 
   }
   onRouteChange = (route) => {
